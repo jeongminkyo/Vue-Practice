@@ -1,6 +1,15 @@
 <template>
     <div>
-        <todo-item />
+        <todo-item 
+            v-for="todo in todos"
+            :key="todo.id"
+            :todo="todo"
+            @update-todo="updateTodo"
+            @delete-todo="deleteTodo"
+        />
+
+        <hr />
+
         <todo-creator @create-todo="createTodo"/>
     </div>
 </template>
@@ -9,6 +18,7 @@
 import lowdb from 'lowdb'
 import LocalStorage from 'lowdb/adapters/LocalStorage'
 import cryptoRandomString from 'crypto-random-string'
+import _cloneDeep from 'lodash/cloneDeep'
 import TodoCreator from './TodoCreator'
 import TodoItem from './TodoItem'
 
@@ -20,7 +30,8 @@ export default {
 
     data () {
         return {
-            db: null
+            db: null,
+            todos: []
         }
     },
 
@@ -33,12 +44,18 @@ export default {
             const adapter = new LocalStorage('todo-app') // DB
             this.db = lowdb(adapter)
 
-            // Local DB 초기화
-            this.db
-            .defaults({
-                todos: [] // Collection
-            })
-            .write()
+            const hasTodos = this.db.has('todos').value()
+
+            if(hasTodos) {
+                this.todos = _cloneDeep(this.db.getState().todos) // 깊은복사
+            } else {
+                // Local DB 초기화
+                this.db
+                .defaults({
+                    todos: [] // Collection
+                })
+                .write()
+            }
         },
         createTodo (title) {
             const newTodo = {
@@ -53,6 +70,12 @@ export default {
               .get('todos') // lodash
               .push(newTodo) // lodash
               .write() // lowdb
+        },
+        updateTodo () {
+            console.log('update todo')
+        },
+        deleteTodo () {
+            console.log('delete todo')
         }
     }
 }
