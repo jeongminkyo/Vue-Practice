@@ -19,6 +19,8 @@ import lowdb from 'lowdb'
 import LocalStorage from 'lowdb/adapters/LocalStorage'
 import cryptoRandomString from 'crypto-random-string'
 import _cloneDeep from 'lodash/cloneDeep'
+import _find from 'lodash/find'
+import _assign from 'lodash/assign'
 import TodoCreator from './TodoCreator'
 import TodoItem from './TodoItem'
 
@@ -66,13 +68,25 @@ export default {
                 done: false
             }
 
+            //Create DB
             this.db
-              .get('todos') // lodash
-              .push(newTodo) // lodash
-              .write() // lowdb
+                .get('todos') // lodash
+                .push(newTodo) // lodash
+                .write() // lowdb
+
+            // Create Client
+            this.todos.push(newTodo)
         },
-        updateTodo () {
-            console.log('update todo')
+        updateTodo (todo, value) {
+            this.db
+                .get('todos')
+                .find({ id: todo.id })
+                .assign(value)
+                .write()
+
+            const foundTodo = _find(this.todos, { id: todo.id })
+            _assign(foundTodo, value)
+            
         },
         deleteTodo () {
             console.log('delete todo')
