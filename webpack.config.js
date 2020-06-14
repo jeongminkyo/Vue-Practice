@@ -9,7 +9,7 @@ require('@babel/polyfill')
 module.exports = (env, opts) => {
   const config = {
     resolve: {
-      extendsions: ['.vue', '.js']
+      extensions: ['.vue', '.js']
     },
     // 진입점 project가 시작될 가장 첫 시작점
     entry: {
