@@ -75,8 +75,8 @@ import _assign from 'lodash/assign'
 import _findIndex from 'lodash/findIndex'
 import _forEachRight from 'lodash/forEachRight'
 import scrollTo from 'scroll-to'
-import TodoCreator from './TodoCreator'
-import TodoItem from './TodoItem'
+import TodoCreator from '~/components/TodoCreator'
+import TodoItem from '~/components/TodoItem'
 
 export default {
     components: {
@@ -245,5 +245,5 @@ export default {
 </script>
 
 <style lang="scss">
-    @import "../scss/style"
+    @import "scss/style"
 </style>
